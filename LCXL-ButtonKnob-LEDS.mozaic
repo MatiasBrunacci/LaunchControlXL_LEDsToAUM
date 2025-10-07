@@ -1,0 +1,141 @@
+// ---------------------------------------------------------------
+// ?? Launch Control XL LED Helper (Mozaic + AUM)
+//
+// Extended version with variable template support.
+// This script controls the LEDs and ring indicators of the
+// Novation Launch Control XL while used with AUM or any
+// iOS app that can send/receive MIDI feedback.
+//
+// You can freely switch between Factory and User templates.
+// The LED behavior (colors, ring animation, etc.) remains
+// exactly the same as the original by richtowns.
+//
+// template = 0x00 ? User 1
+// template = 0x08 ? Factory 1
+// ---------------------------------------------------------------
+
+@OnLoad
+
+  // Short name for the Mozaic window
+  SetShortName {LC_LEDS}
+
+  // === Template selection ===
+  // Change this value if you want to use a different Launch Control XL template.
+  // The LCXL uses 0x00–0x07 for User templates and 0x08–0x0F for Factory templates.
+  //
+  // Example:
+  //   0x00 = User 1
+  //   0x01 = User 2
+  //   0x08 = Factory 1
+  //   0x09 = Factory 2
+  //
+  // By default this script uses User 1.
+  template = 0x00
+
+  // --- Change current template (SysEx command 0x77) ---
+  // This message tells the Launch Control XL to switch to the desired template.
+  // Format: F0 00 20 29 02 11 77 [template] F7
+  sysChange[] = [ 0x00,0x20,0x29,0x02,0x11,0x77,0x00 ]
+  sysChange[6] = template
+  SendSysex sysChange, 7
+
+  // --- LED/Ring message header (SysEx command 0x78) ---
+  // This will be reused later to update LEDs dynamically.
+  // sysButton[6] = template ? defines which template we are writing to.
+  // sysButton[7] = index    ? the LED or ring number (0–39).
+  // sysButton[8] = value    ? color or ring brightness level.
+  sysButton[] = [ 0x00,0x20,0x29,0x02,0x11,0x78,0x00,0x00,0x00 ]
+  sysButton[6] = template
+
+  // Array holding the toggle state (on/off) for the 16 buttons.
+  // 1 = on, 0 = off
+  states[] = [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
+
+  // Default note numbers for Factory #1 buttons.
+  // Use the same mapping on your User template to ensure correct LED feedback.
+  notes[] = [ 41, 42, 43, 44, 57, 58, 59, 60, 73, 74, 75, 76, 89, 90, 91, 92 ]
+
+  // Default CC numbers for Factory #1 knobs.
+  // Again, make sure your User template uses the same assignments for consistency.
+  ccs[] = [13,14,15,16,17,18,19,20,29,30,31,32,33,34,35,36,49,50,51,52,53,54,55,56]
+
+  // Turn off all LEDs at startup.
+  // This covers 24 knobs + 16 buttons = 40 LEDs total.
+  // SysEx "value" 12 corresponds to LED off (dim red in LCXL color table).
+  for i = 0 to 39
+    sysButton[7] = i
+    sysButton[8] = 12
+    SendSysex sysButton, 9
+  endfor
+
+@End
+
+
+@OnMidiNoteOn
+  // This block handles button presses (MIDI Note On messages)
+  // and toggles their corresponding LEDs.
+
+  for i = 0 to 15
+
+    if MIDIByte2 = notes[i]
+      // Button LED indexes start at 24 (Launch Control XL layout).
+      sysButton[7] = 24 + i
+
+      if states[i] = 1
+        // Turn LED on (orange or green depending on row).
+        states[i] = 0
+        sysButton[8] = 28   // bright orange by default
+
+        if i > 7
+          // For the bottom row, use a different color (greenish).
+          sysButton[8] = 13
+        endif
+
+      else
+        // Turn LED off
+        states[i] = 1
+        sysButton[8] = 12
+      endif
+
+      // Send SysEx update to Launch Control XL
+      SendSysex sysButton, 9
+
+      // Uncomment this for debugging:
+      // log sysButton[7], { }, sysButton[8]
+    endif
+
+  endfor
+
+@End
+
+
+@OnMidiCC
+  // This block manages incoming CC messages from the LCXL knobs.
+  // It updates the LED rings visually depending on the knob position.
+
+  for i = 0 to 24
+
+    if MIDIByte2 = ccs[i]
+      sysButton[7] = i   // ring index 0–23
+
+      // Define LED color according to knob value (0–127)
+      if MIDIByte3 > 90
+        sysButton[8] = 13   // bright green
+      elseif MIDIByte3 > 60
+        sysButton[8] = 28   // orange
+      elseif MIDIByte3 > 30
+        sysButton[8] = 29   // yellowish
+      else
+        sysButton[8] = 12   // off/dim red
+      endif
+
+      // Send SysEx feedback for this ring
+      SendSysex sysButton, 9
+
+      // Uncomment this for debugging:
+      // log i, { }, MIDIByte3
+    endif
+
+  endfor
+
+@End
