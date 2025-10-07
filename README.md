@@ -1,6 +1,6 @@
 # LaunchControlXL_LEDsToAUM
 
-This is an **extended version** of the [Launch Control XL LEDs](https://patchstorage.com/launch-control-xl-leds/) Mozaic script originally shared by **richtowns**.  
+This is an **extended version** of the [Launch Control XL LEDs](https://patchstorage.com/launch-control-xl-leds/) Mozaic script originally shared by [richtowns](https://patchstorage.com/launch-control-xl-leds/).  
 It adds **support for User Templates** (e.g. *User 1*, *User 2*, etc.), allowing you to use your own custom mappings while keeping full LED and ring feedback working in **AUM**.
 
 The script forces the Launch Control XL to switch to the selected **User or Factory template** on load, then updates all button LEDs and knob rings in real time.  
