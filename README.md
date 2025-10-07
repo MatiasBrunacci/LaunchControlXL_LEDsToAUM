@@ -61,6 +61,6 @@ Reload the script. The LCXL will switch to the chosen template and keep LED/ring
 
 🙏 Credits
 
-Original concept and base code by [richtowns](https://patchstorage.com/launch-control-xl-leds/).
-From Richtowns: Inspired by shared ideas and snippets from roland, derwent, _ki, and mcD — huge thanks to all of them for their contributions to the Mozaic community.
+Original concept and base code by [richtowns](https://patchstorage.com/launch-control-xl-leds/).<br>
+From Richtowns: Inspired by shared ideas and snippets from roland, derwent, _ki, and mcD — huge thanks to all of them for their contributions to the Mozaic community.<br>
 Extended version and User Template support by Matías Brunacci (2025).
