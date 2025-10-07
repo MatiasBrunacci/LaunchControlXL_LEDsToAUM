@@ -1,6 +1,6 @@
 # LaunchControlXL_LEDsToAUM
 
-![5379653F-2081-4491-B7CC-C94530ABC360](https://github.com/user-attachments/assets/2902de8c-791e-45c5-ae51-b44af05004c8)
+<img src="https://github.com/user-attachments/assets/2902de8c-791e-45c5-ae51-b44af05004c8" width="500">  <br>
 
 This is an **extended version** of the [Launch Control XL LEDs](https://patchstorage.com/launch-control-xl-leds/) Mozaic script originally shared by [richtowns](https://patchstorage.com/launch-control-xl-leds/).  
 It adds **support for User Templates** (e.g. *User 1*, *User 2*, etc.), allowing you to use your own custom mappings while keeping full LED and ring feedback working in **AUM**.
