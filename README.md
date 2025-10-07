@@ -24,13 +24,24 @@ It works in **Low Power Mode** directly connected to the iPad, and is ideal for 
 2. Connect your **Launch Control XL** to **Mozaic** as both MIDI input and output.  
 3. Edit the variable "template" `template = 0x00` to match your preferred template/preset:
 
-0x00 → User 1
-0x01 → User 2
-etc...
+- 0x00 → User 1
+- 0x01 → User 2
+- 0x02 → User 3
+- 0x03 → User 4
+- 0x04 → User 5
+- 0x05 → User 6
+- 0x06 → User 7
+- 0x07 → User 8
 
-0x08 → Factory 1
-0x09 → Factory 2
-etc...
+- 0x08 → Factory 1
+- 0x09 → Factory 2
+- 0x10 → Factory 3
+- 0x11 → Factory 4
+- 0x12 → Factory 5
+- 0x13 → Factory 6
+- 0x14 → Factory 7
+- 0x15 → Factory 8
+
 
 Reload the script. The LCXL will switch to the chosen template and keep LED/ring feedback active.
 
